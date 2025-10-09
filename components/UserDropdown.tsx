@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "./ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { LogOut } from "lucide-react"
+import NavItems from "./NavItems"
 
 const UserDropdown = () => {
     const router = useRouter();
@@ -34,12 +35,8 @@ const UserDropdown = () => {
         </Avatar>
         <div className="hidden md:flex flex-col items-start">
             <span className="text-base font-medium text-gray-400">
-                {user.name}
+                {user.name.split(' ')[0]}
             </span>
-        </div>
-        <div className="flex flex-col">
-            <p className="text-sm font-medium">{user.name}</p>
-            <p className="text-sm text-gray-500">{user.email}</p>
         </div>
     </Button>
   </DropdownMenuTrigger>
@@ -67,6 +64,10 @@ const UserDropdown = () => {
         <LogOut className='h-4 w-4 mr-2 hidden sm:block'/>
         Logout
     </DropdownMenuItem>
+    <DropdownMenuSeparator className="hidden sm:block bg-gray-600"/>
+    <nav className='sm:hidden'>
+      <NavItems/>
+    </nav>
   </DropdownMenuContent>
 </DropdownMenu>
   )
