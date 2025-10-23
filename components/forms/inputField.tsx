@@ -20,6 +20,6 @@ const InputField = ({ name, label, placeholder, type = "text", register, error, 
             />
             {error && <p className="text-sm text-red-500">{error.message}</p>}
         </div>
-    )
+    )  
 }
 export default InputField

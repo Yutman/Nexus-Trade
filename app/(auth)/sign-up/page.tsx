@@ -3,10 +3,12 @@
 import React from 'react'
 import {Button} from '@/components/ui/button'
 import {useForm} from 'react-hook-form'
-import { useRouter } from 'next/router'
-import InputField from '@/components/forms/inputfield'
+import { useRouter } from 'next/navigation'
+import InputField from '@/components/forms/inputField'
 import {CountrySelectField} from '@/components/forms/CountrySelectField'
 import SelectField from '@/components/forms/SelectField'
+import {INVESTMENT_GOALS, PREFERRED_INDUSTRIES, RISK_TOLERANCE_OPTIONS} from "@/lib/constants";
+import FooterLink from '@/components/forms/FooterLink'
 
 const SignUp = () => {
   const router = useRouter()
@@ -57,7 +59,7 @@ const SignUp = () => {
                 <InputField
                     name="email"
                     label="Email"
-                    placeholder="contact@jsmastery.com"
+                    placeholder="johndoe@email.com"
                     register={register}
                     error={errors.email}
                     validation={{ required: 'Email name is required', pattern: /^\w+@\w+\.\w+$/, message: 'Email address is required' }}
