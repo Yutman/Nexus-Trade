@@ -1,14 +1,16 @@
 'use client'
 
 import React from 'react'
-import {Button} from '@/components/ui/button'
-import {useForm} from 'react-hook-form'
-import { useRouter } from 'next/navigation'
-import InputField from '@/components/forms/inputField'
-import {CountrySelectField} from '@/components/forms/CountrySelectField'
-import SelectField from '@/components/forms/SelectField'
+import {Button} from '@/components/ui/button';
+import {useForm} from 'react-hook-form';
+import { useRouter } from 'next/navigation';
+import InputField from '@/components/forms/inputField';
+import {CountrySelectField} from '@/components/forms/CountrySelectField';
+import SelectField from '@/components/forms/SelectField';
+import {signUpWithEmail} from "@/lib/actions/auth.actions";
 import {INVESTMENT_GOALS, PREFERRED_INDUSTRIES, RISK_TOLERANCE_OPTIONS} from "@/lib/constants";
-import FooterLink from '@/components/forms/FooterLink'
+import FooterLink from '@/components/forms/FooterLink';
+import {toast} from "sonner";
 
 const SignUp = () => {
   const router = useRouter()
@@ -72,8 +74,17 @@ const SignUp = () => {
                     }}
                 />
 
-                
+            <InputField
+                    name="password"
+                    label="Password"
+                    placeholder="Enter a strong password"
+                    type="password"
+                    register={register}
+                    error={errors.password}
+                    validation={{ required: 'Password is required', minLength: 8 }}
+                />
 
+                
                 <CountrySelectField
                     name="country"
                     label="Country"

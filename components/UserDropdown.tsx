@@ -13,15 +13,17 @@ import { Button } from "./ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { LogOut } from "lucide-react"
 import NavItems from "./NavItems"
+import {signOut} from "@/lib/actions/auth.actions";
 
-const UserDropdown = () => {
+
+const UserDropdown = ({user}: {user: User}) => {
     const router = useRouter();
 
-    const handleSignOut = async () => {
-        router.push('/sign-in');
+     const handleSignOut = async () => {
+        await signOut();
+        router.push("/sign-in");
     }
 
-    const user = {name: 'John', email: 'nimimishiri@gmail.com'};
 
     // Safe function to extract first name
     const getFirstName = (name: string | null | undefined): string => {

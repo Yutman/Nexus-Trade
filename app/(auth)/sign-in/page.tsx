@@ -6,6 +6,9 @@ import {useForm} from 'react-hook-form'
 import { useRouter } from 'next/navigation'
 import InputField from '@/components/forms/inputField'
 import FooterLink from '@/components/forms/FooterLink'
+import { signInWithEmail } from '@/lib/actions/auth.actions'
+import {toast} from 'sonner'
+
 
 const SignIn = () => {
   const router = useRouter()
