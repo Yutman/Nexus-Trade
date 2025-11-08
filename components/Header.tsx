@@ -16,7 +16,6 @@ const Header = ({user}: {user: User}) => {
         </nav>
         <UserDropdown  user={user}/>
       </div>
-     Header 
     </header>
   )
 }

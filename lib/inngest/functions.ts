@@ -37,7 +37,7 @@ export const sendSignUpEmail = inngest.createFunction(
 
         return {
             success: true, 
-            message: 'Welcome emain sent successfully'
+            message: 'Welcome email sent successfully'
         }
      }
 )

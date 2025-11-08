@@ -1,6 +1,9 @@
 import { Inngest} from "inngest";
 
+if (!process.env.GEMINI_API_KEY) {
+    throw new Error('GEMINI_API_KEY environment variable is required for Inngest AI features');
+}
 export const inngest = new Inngest({
     id: 'nexustrade',
-    ai: { gemini: { apiKey: process.env.GEMINI_API_KEY! }}
+    ai: { gemini: { apiKey: process.env.GEMINI_API_KEY }}
 })
