@@ -29,10 +29,11 @@ export const sendWelcomeEmail = async ({ email, name, intro }: WelcomeEmailData)
 export const sendNewsSummaryEmail = async (
     { email, date, newsContent }: { email: string; date: string; newsContent: string }
 ): Promise<void> => {
+const escapedNewsContent = newsContent.replace(/\$/g, '$$$$');
     const htmlTemplate = NEWS_SUMMARY_EMAIL_TEMPLATE
         .replace('{{date}}', date)
-        .replace('{{newsContent}}', newsContent);
-
+        .replace('{{newsContent}}', escapedNewsContent);
+        
     const mailOptions = {
         from: `"NexusTrade News" <nexustrade@gmail.com>`,
         to: email,
@@ -43,3 +44,5 @@ export const sendNewsSummaryEmail = async (
 
     await transporter.sendMail(mailOptions);
 };
+
+
