@@ -2,12 +2,49 @@ import { NextResponse } from 'next/server'
 import crypto from 'crypto'
 import { connectToDatabase } from '@/database/mongoose'
 import { transporter } from '@/lib/nodemailer'
+import { getClientIp, hitRateLimit } from '@/lib/rate-limit'
 
 export async function POST(request: Request) {
 	try {
 		const { email } = await request.json()
 		if (!email || typeof email !== 'string') {
 			return NextResponse.json({ message: 'Email is required' }, { status: 400 })
+		}
+
+		// Rate limiting (per-IP and per-email)
+		const clientIp = getClientIp(request)
+		// Defaults: X requests per minute (IP), Y per hour (email)
+		const IP_LIMIT = Number(process.env.FORGOT_PW_IP_LIMIT_PER_MIN || 10) // safe default
+		const EMAIL_LIMIT = Number(process.env.FORGOT_PW_EMAIL_LIMIT_PER_HOUR || 5)
+
+		const ipCheck = hitRateLimit('fp:ip', clientIp, IP_LIMIT, 60_000)
+		if (ipCheck.limited) {
+			console.warn(`Rate limit (IP) exceeded: ip=${clientIp}`)
+			return new NextResponse(
+				JSON.stringify({ message: 'Too many requests. Please try again later.' }),
+				{
+					status: 429,
+					headers: {
+						'Content-Type': 'application/json',
+						'Retry-After': String(ipCheck.resetAfterSeconds || 60),
+					},
+				}
+			)
+		}
+
+		const emailCheck = hitRateLimit('fp:email', email.toLowerCase(), EMAIL_LIMIT, 60 * 60_000)
+		if (emailCheck.limited) {
+			console.warn(`Rate limit (email) exceeded: email=${email}`)
+			return new NextResponse(
+				JSON.stringify({ message: 'Too many requests. Please try again later.' }),
+				{
+					status: 429,
+					headers: {
+						'Content-Type': 'application/json',
+						'Retry-After': String(emailCheck.resetAfterSeconds || 300),
+					},
+				}
+			)
 		}
 
 		const mongoose = await connectToDatabase()
@@ -34,8 +71,6 @@ export async function POST(request: Request) {
 
 			const baseUrl =
 				process.env.NEXT_PUBLIC_BASE_URL ||
-				process.env.NEXT_PUBLIC_APP_URL ||
-				process.env.BETTER_AUTH_URL ||
 				'http://localhost:3000'
 			const resetUrl = `${baseUrl}/reset-password?token=${token}`
 

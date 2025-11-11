@@ -39,7 +39,7 @@ const ForgotPasswordPage = () => {
 
       setSubmitted(true);
       reset();
-      toast.success("Check your email for a reset link.");
+      toast.success("If an account exists, a reset link will be sent.");
     } catch (e) {
       console.error(e);
       toast.success("If an account exists, a reset link will be sent.");
@@ -61,8 +61,10 @@ const ForgotPasswordPage = () => {
           error={errors.email}
           validation={{
             required: "Email is required",
-            pattern: /^\w+@\w+\.\w+$/,
-            message: "Enter a valid email address",
+           pattern: {
+            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+              message: "Enter a valid email address",
+            },
           }}
         />
 

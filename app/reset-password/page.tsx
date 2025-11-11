@@ -6,8 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
 import { Eye, EyeOff, Loader2 } from 'lucide-react'
-
-const PASSWORD_REGEX = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/
+import { PASSWORD_MIN_LENGTH, PASSWORD_REGEX, validatePassword } from '@/lib/validation/password'
 
 const ResetPasswordPage = () => {
 	const searchParams = useSearchParams()
@@ -70,8 +69,9 @@ const ResetPasswordPage = () => {
 			toast.error('Passwords do not match.')
 			return
 		}
-		if (!PASSWORD_REGEX.test(password)) {
-			toast.error('Password must be 8+ chars, include a letter and a number.')
+		const check = validatePassword(password)
+		if (!check.valid) {
+			toast.error(check.message || 'Invalid password.')
 			return
 		}
 		try {
@@ -137,7 +137,7 @@ const ResetPasswordPage = () => {
 									className="form-input pr-10"
 									value={password}
 									onChange={(e) => setPassword(e.target.value)}
-									aria-invalid={password.length > 0 && !PASSWORD_REGEX.test(password)}
+									aria-invalid={password.length > 0 && !validatePassword(password).valid}
 								/>
 								<button
 									type="button"

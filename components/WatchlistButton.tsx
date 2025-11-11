@@ -4,6 +4,14 @@ import React, { useMemo, useState } from "react";
 // Minimal WatchlistButton implementation to satisfy page requirements.
 // This component focuses on UI contract only. It toggles local state and
 // calls onWatchlistChange if provided. Styling hooks match globals.css.
+interface WatchlistButtonProps {
+  symbol: string;
+  company: string;
+  isInWatchlist: boolean;
+  showTrashIcon?: boolean;
+  type?: "icon" | "button";
+  onWatchlistChange?: (symbol: string, added: boolean) => void;
+}
 
 const WatchlistButton = ({
   symbol,
@@ -14,6 +22,10 @@ const WatchlistButton = ({
   onWatchlistChange,
 }: WatchlistButtonProps) => {
   const [added, setAdded] = useState<boolean>(!!isInWatchlist);
+
+  React.useEffect(() => {
+  setAdded(!!isInWatchlist);
+}, [isInWatchlist]);
 
   const label = useMemo(() => {
     if (type === "icon") return added ? "" : "";
