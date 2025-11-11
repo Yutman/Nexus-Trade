@@ -72,7 +72,7 @@ export async function POST(request: Request) {
 
 		if (nextPassword.length > PASSWORD_MAX_LENGTH) {
       return NextResponse.json({ message: 'Password must not exceed 128 characters' }, { status: 400 })
-    }
+}
 		const tokenHash = crypto.createHash('sha256').update(token).digest('hex')
 
 		const mongoose = await connectToDatabase()
