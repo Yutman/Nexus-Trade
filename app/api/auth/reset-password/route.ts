@@ -131,18 +131,7 @@ export async function POST(request: Request) {
 		)
 
 		if (!epResult.acknowledged || epResult.matchedCount === 0) {
-			const updated = await db.collection('user').findOneAndUpdate(
-				{ _id: (user as any)._id },
-				{ $inc: { resetTokenAttempts: 1 } },
-				{ returnDocument: 'after' }
-			)
-			const newAttempts = Number((updated.value as any)?.resetTokenAttempts || attempts + 1)
-			if (newAttempts >= MAX_ATTEMPTS) {
-				await db.collection('user').updateOne(
-					{ _id: (user as any)._id },
-					{ $unset: { resetTokenHash: '', resetTokenExpiry: '', resetTokenAttempts: '' } }
-				)
-			}
+			console.error('email_password record not found for userId:', userId)
 			return NextResponse.json({ message: 'Failed to reset password' }, { status: 500 })
 		}
 
