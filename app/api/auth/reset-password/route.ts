@@ -9,7 +9,20 @@ export async function GET(request: Request) {
 	const { searchParams } = new URL(request.url)
 	const token = searchParams.get('token') || ''
 	if (!token) return NextResponse.json({ valid: false, message: 'Invalid token' }, { status: 400 })
-
+	
+	const clientIp = getClientIp(request)
+	const IP_LIMIT = Number(process.env.RESET_PW_GET_IP_LIMIT_PER_MIN || 20)
+	const ipCheck = hitRateLimit('rp:get:ip', clientIp, IP_LIMIT, 60_000)
+	if (ipCheck.limited) {
+		console.warn(`Rate limit (reset GET IP) exceeded: ip=${clientIp}`)
+		return new NextResponse(JSON.stringify({ valid: false, message: 'Too many requests. Please try again later.' }), {
+			status: 429,
+			headers: {
+				'Content-Type': 'application/json',
+				'Retry-After': String(ipCheck.resetAfterSeconds || 60),
+			},
+		})
+	}
 	try {
 		const tokenHash = crypto.createHash('sha256').update(token).digest('hex')
 
