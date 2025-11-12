@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
@@ -23,10 +23,21 @@ const SignIn = () => {
     mode: "onBlur",
   });
 
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+
   const onSubmit = async (data: SignInFormData) => {
     try {
+      setPasswordError(null);
       const result = await signInWithEmail(data);
-      if (result.success) router.push("/");
+      if (result.success) {
+        router.push("/");
+      } else if (result.error === "Invalid password") {
+        setPasswordError("Invalid password");
+      } else if (result.error) {
+        toast.error("Sign in failed", {
+          description: result.error,
+        });
+      }
     } catch (e) {
       console.error(e);
       toast.error("Sign in failed", {
@@ -62,7 +73,7 @@ const SignIn = () => {
           placeholder="Enter your password"
           type="password"
           register={register}
-          error={errors.password}
+          error={errors.password || (passwordError ? { message: passwordError } : undefined)}
           validation={{ required: "Password is required", minLength: 8 }}
         />
 
