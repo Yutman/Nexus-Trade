@@ -2,27 +2,13 @@ import { NextResponse } from 'next/server'
 import crypto from 'crypto'
 import { connectToDatabase } from '@/database/mongoose'
 import bcrypt from 'bcryptjs'
-import { getClientIp, hitRateLimit } from '@/lib/rate-limit'
 import { PASSWORD_MAX_LENGTH, validatePassword } from '@/lib/validation/password'
 
 export async function GET(request: Request) {
 	const { searchParams } = new URL(request.url)
 	const token = searchParams.get('token') || ''
 	if (!token) return NextResponse.json({ valid: false, message: 'Invalid token' }, { status: 400 })
-	
-	const clientIp = getClientIp(request)
-	const IP_LIMIT = Number(process.env.RESET_PW_GET_IP_LIMIT_PER_MIN || 20)
-	const ipCheck = hitRateLimit('rp:get:ip', clientIp, IP_LIMIT, 60_000)
-	if (ipCheck.limited) {
-		console.warn(`Rate limit (reset GET IP) exceeded: ip=${clientIp}`)
-		return new NextResponse(JSON.stringify({ valid: false, message: 'Too many requests. Please try again later.' }), {
-			status: 429,
-			headers: {
-				'Content-Type': 'application/json',
-				'Retry-After': String(ipCheck.resetAfterSeconds || 60),
-			},
-		})
-	}
+
 	try {
 		const tokenHash = crypto.createHash('sha256').update(token).digest('hex')
 
@@ -52,35 +38,6 @@ export async function POST(request: Request) {
 		const nextPassword = newPassword || password
 		if (!token || !nextPassword) {
 			return NextResponse.json({ message: 'Token and password are required' }, { status: 400 })
-		}
-
-		// Rate limit by IP and token (fixed window)
-		const clientIp = getClientIp(request)
-		const IP_LIMIT = Number(process.env.RESET_PW_IP_LIMIT_PER_MIN || 10)
-		const TOKEN_LIMIT = Number(process.env.RESET_PW_TOKEN_LIMIT_PER_MIN || 10)
-
-		const ipCheck = hitRateLimit('rp:ip', clientIp, IP_LIMIT, 60_000)
-		if (ipCheck.limited) {
-			console.warn(`Rate limit (reset POST IP) exceeded: ip=${clientIp}`)
-			return new NextResponse(JSON.stringify({ message: 'Too many requests. Please try again later.' }), {
-				status: 429,
-				headers: {
-					'Content-Type': 'application/json',
-					'Retry-After': String(ipCheck.resetAfterSeconds || 60),
-				},
-			})
-		}
-
-		const tokenLimiter = hitRateLimit('rp:token', token, TOKEN_LIMIT, 60_000)
-		if (tokenLimiter.limited) {
-			console.warn(`Rate limit (reset POST token) exceeded.`)
-			return new NextResponse(JSON.stringify({ message: 'Too many requests. Please try again later.' }), {
-				status: 429,
-				headers: {
-					'Content-Type': 'application/json',
-					'Retry-After': String(tokenLimiter.resetAfterSeconds || 60),
-				},
-			})
 		}
 
 		if (nextPassword.length > PASSWORD_MAX_LENGTH) {
@@ -136,8 +93,7 @@ export async function POST(request: Request) {
 		const saltRounds = 10
 		const hashedPassword = await bcrypt.hash(nextPassword, saltRounds)
 
-		// Attempt to update Better Auth email/password record
-		// Common collection name pattern: "email_password" with userId reference
+		// Update Better Auth email/password record. If missing, log and return user-facing message.
 		const epResult = await db.collection('email_password').updateOne(
 			{ userId },
 			{ $set: { passwordHash: hashedPassword, hashedPassword } }
@@ -145,7 +101,10 @@ export async function POST(request: Request) {
 
 		if (!epResult.acknowledged || epResult.matchedCount === 0) {
 			console.error('email_password record not found for userId:', userId)
-			return NextResponse.json({ message: 'Failed to reset password' }, { status: 500 })
+			return NextResponse.json(
+				{ message: "This account doesn't support password reset (e.g., OAuth only)." },
+				{ status: 400 }
+			)
 		}
 
 		// Clear reset token fields on user
@@ -157,7 +116,7 @@ export async function POST(request: Request) {
 		return NextResponse.json({ message: 'Password has been reset successfully' }, { status: 200 })
 	} catch (e) {
 		console.error('reset-password POST error:', e)
-		return NextResponse.json({ message: 'Failed to reset password' }, { status: 500 })
+		return NextResponse.json({ message: 'Failed to reset password' }, { status: 400 })
 	}
 }
 
