@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { Suspense, useEffect, useMemo, useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -8,7 +8,7 @@ import { toast } from 'sonner'
 import { Eye, EyeOff, Loader2 } from 'lucide-react'
 import { PASSWORD_MIN_LENGTH, PASSWORD_REGEX, validatePassword } from '@/lib/validation/password'
 
-const ResetPasswordPage = () => {
+const ResetPasswordContent = () => {
 	const searchParams = useSearchParams()
 	const router = useRouter()
 	const token = useMemo(() => searchParams.get('token') || '', [searchParams])
@@ -195,6 +195,26 @@ const ResetPasswordPage = () => {
 	)
 }
 
+const LoadingFallback = () => (
+	<main className="min-h-[80vh] flex items-center justify-center px-4">
+		<div className="w-full max-w-md border border-input/60 rounded-lg p-6 bg-background/60 backdrop-blur flex items-center justify-center">
+			<div className="flex items-center gap-2 text-muted-foreground">
+				<Loader2 className="animate-spin" />
+				<span>Loading reset form...</span>
+			</div>
+		</div>
+	</main>
+)
+
+const ResetPasswordPage = () => {
+	return (
+		<Suspense fallback={<LoadingFallback />}>
+			<ResetPasswordContent />
+		</Suspense>
+	)
+}
+
 export default ResetPasswordPage
+
 
 
