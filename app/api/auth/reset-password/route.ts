@@ -136,17 +136,20 @@ export async function POST(request: Request) {
 		const saltRounds = 10
 		const hashedPassword = await bcrypt.hash(nextPassword, saltRounds)
 
-		// Attempt to update Better Auth email/password record
-		// Common collection name pattern: "email_password" with userId reference
-		const epResult = await db.collection('email_password').updateOne(
+		// Ensure credentials record exists (some accounts may be OAuth-only)
+		const credentials = await db.collection('email_password').findOne({ userId })
+		if (!credentials) {
+			return NextResponse.json(
+				{ error: "This account doesn't support password reset (e.g., OAuth only)." },
+				{ status: 400 }
+			)
+		}
+
+		// Update Better Auth email/password record
+		await db.collection('email_password').updateOne(
 			{ userId },
 			{ $set: { passwordHash: hashedPassword, hashedPassword } }
 		)
-
-		if (!epResult.acknowledged || epResult.matchedCount === 0) {
-			console.error('email_password record not found for userId:', userId)
-			return NextResponse.json({ message: 'Failed to reset password' }, { status: 500 })
-		}
 
 		// Clear reset token fields on user
 		await db.collection('user').updateOne(
@@ -157,7 +160,7 @@ export async function POST(request: Request) {
 		return NextResponse.json({ message: 'Password has been reset successfully' }, { status: 200 })
 	} catch (e) {
 		console.error('reset-password POST error:', e)
-		return NextResponse.json({ message: 'Failed to reset password' }, { status: 500 })
+		return NextResponse.json({ error: 'Failed to reset password' }, { status: 400 })
 	}
 }
 
