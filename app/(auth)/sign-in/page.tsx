@@ -8,6 +8,9 @@ import InputField from "@/components/forms/inputField";
 import FooterLink from "@/components/forms/FooterLink";
 import { signInWithEmail } from "@/lib/actions/auth.actions";
 import { toast } from "sonner";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Eye, EyeOff } from "lucide-react";
 
 const SignIn = () => {
   const router = useRouter();
@@ -24,6 +27,7 @@ const SignIn = () => {
   });
 
   const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = async (data: SignInFormData) => {
     try {
@@ -60,22 +64,41 @@ const SignIn = () => {
           error={errors.email}
           validation={{
             required: "Email name is required",
-          pattern: {
+            pattern: {
               value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
               message: "Enter a valid email address",
             },
           }}
         />
 
-        <InputField
-          name="password"
-          label="Password"
-          placeholder="Enter your password"
-          type="password"
-          register={register}
-          error={errors.password || (passwordError ? { message: passwordError } : undefined)}
-          validation={{ required: "Password is required", minLength: 8 }}
-        />
+        <div className="space-y-2">
+          <Label htmlFor="password" className="form-label">
+            Password
+          </Label>
+          <div className="relative">
+            <Input
+              type={showPassword ? "text" : "password"}
+              id="password"
+              placeholder="Enter your password"
+              className="form-input pr-10"
+              aria-invalid={Boolean(errors.password || passwordError)}
+              {...register("password", { required: "Password is required", minLength: 8 })}
+            />
+            <button
+              type="button"
+              className="absolute inset-y-0 right-2 my-auto text-muted-foreground hover:text-foreground"
+              onClick={() => setShowPassword((s) => !s)}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+            </button>
+          </div>
+          {(errors.password || passwordError) && (
+            <p className="text-sm text-red-500">
+              {errors.password?.message || passwordError}
+            </p>
+          )}
+        </div>
 
         <Button
           type="submit"
