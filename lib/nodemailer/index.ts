@@ -11,15 +11,27 @@ export const transporter = nodemailer.createTransport({
 })
 
 export const sendWelcomeEmail = async ({ email, name, intro }: WelcomeEmailData) => {
+    const baseAppUrl = (process.env.NEXT_PUBLIC_APP_URL || 'https://your-nexus-trade-domain.com').replace(/\/+$/, '');
+    const logoUrl = process.env.NEXT_PUBLIC_WELCOME_EMAIL_LOGO_URL || `${baseAppUrl}/images/nexus-trade-logo.png`;
+    const previewUrl = process.env.NEXT_PUBLIC_WELCOME_EMAIL_PREVIEW_URL || `${baseAppUrl}/images/nexus-trade-dashboard.png`;
+    const dashboardUrl = `${baseAppUrl}/dashboard`;
+    const unsubscribeUrl = `${baseAppUrl}/unsubscribe?email=${encodeURIComponent(email)}`;
+    const siteUrl = baseAppUrl;
+
     const htmlTemplate = WELCOME_EMAIL_TEMPLATE
         .replace('{{name}}', name)
-        .replace('{{intro}}', intro);
+        .replace('{{intro}}', intro)
+        .replace('{{logoUrl}}', logoUrl)
+        .replace('{{previewUrl}}', previewUrl)
+        .replace('{{dashboardUrl}}', dashboardUrl)
+        .replace('{{unsubscribeUrl}}', unsubscribeUrl)
+        .replace('{{siteUrl}}', siteUrl);
 
     const mailOptions = {
-        from: `"NexusTrade" <nexustrade@gmail.com>`,
+        from: `"Nexus Trade" <nexustrade@gmail.com>`,
         to: email,
-        subject: `Welcome to NexusTrade - your stock market toolkit is ready!`,
-        text: 'Thanks for joining NexusTrade',
+        subject: `Welcome to Nexus Trade – your market edge starts now`,
+        text: 'Thanks for joining Nexus Trade',
         html: htmlTemplate,
     }
 
