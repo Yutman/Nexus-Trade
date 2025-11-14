@@ -2,7 +2,7 @@
 
 A modern, full-stack stock trading web application built with Next.js, featuring real-time market data, AI-powered insights, automated workflows, and personalized alerts.
 
-## 🚀 Tech Stack
+## Tech Stack
 
 ### Frontend
 - **Next.js 15.5.4** - React framework with App Router
@@ -29,7 +29,7 @@ A modern, full-stack stock trading web application built with Next.js, featuring
 - **ESLint** - Code linting
 - **TypeScript** - Static type checking
 
-## ✨ Features
+##  Features
 
 ### 📊 Stock Dashboard
 Track real-time stock prices with interactive line and candlestick charts, including historical data. Filter stocks by industry, performance, or market cap to find the best investment opportunities.
@@ -55,7 +55,7 @@ Fine-tune alerts and notifications based on user watchlists and preferences for 
 ### 📊 Analytics & Insights
 Gain insights into user behavior, stock trends, and engagement metrics, enabling smarter business and trading decisions.
 
-## 📝 Recent Updates
+## Recent Updates
 
 ### Password Visibility Toggle (Latest)
 Enhanced user experience across authentication pages with secure, accessible password visibility toggles:
@@ -84,7 +84,7 @@ Updated welcome email templates to reflect Nexus Trade branding:
   - Automatically builds dashboard, unsubscribe, and site URLs from `NEXT_PUBLIC_APP_URL`
   - Updated email subject and sender name to "Nexus Trade"
 
-## 🚀 Quickstart
+##  Quickstart
 
 ### Prerequisites
 - Node.js 20+ installed
@@ -168,7 +168,7 @@ npm run build
 npm start
 ```
 
-## 🔧 Environment Variables
+##  Environment Variables
 
 ### Required Variables
 
@@ -221,7 +221,7 @@ Nexus-Trade/
 └── public/               # Static assets
 ```
 
-## 🔐 Authentication
+## Authentication
 
 The application uses Better Auth for secure authentication with:
 - Email/password authentication
@@ -229,7 +229,7 @@ The application uses Better Auth for secure authentication with:
 - Secure password hashing with bcryptjs
 - Session management
 
-## 📧 Email System
+## Email System
 
 The email system is powered by Nodemailer and Inngest:
 - **Welcome Emails**: Sent automatically on user signup with personalized AI-generated content
@@ -239,14 +239,14 @@ The email system is powered by Nodemailer and Inngest:
 
 All emails use responsive HTML templates with dark mode support.
 
-## 🤖 AI Integration
+##  AI Integration
 
 Google Gemini AI powers:
 - Personalized welcome email introductions
 - Daily market news summaries
 - Stock analysis and insights
 
-## 🔄 Background Jobs
+##  Background Jobs
 
 Inngest handles:
 - Automated email delivery
@@ -254,14 +254,14 @@ Inngest handles:
 - Price and volume alert processing
 - User activity tracking
 
-## 🧪 Testing
+##  Testing
 
 Test database connection:
 ```bash
 npm run test:db
 ```
 
-## 📄 License
+## License
 
 This project is private and proprietary.
 
