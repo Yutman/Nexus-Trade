@@ -1,36 +1,278 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Nexus Trade
 
-## Getting Started
+A modern, full-stack stock trading web application built with Next.js, featuring real-time market data, AI-powered insights, automated workflows, and personalized alerts.
 
-First, run the development server:
+## 🚀 Tech Stack
+
+### Frontend
+- **Next.js 15.5.4** - React framework with App Router
+- **React 19.1.0** - UI library
+- **TypeScript 5** - Type-safe development
+- **Tailwind CSS 4** - Utility-first styling
+- **Radix UI** - Accessible component primitives
+- **Lucide React** - Icon library
+- **React Hook Form** - Form management
+- **Sonner** - Toast notifications
+- **Next Themes** - Dark mode support
+
+### Backend & Infrastructure
+- **Better Auth 1.3.34** - Authentication system
+- **MongoDB 6.20.0** & **Mongoose 8.19.2** - Database
+- **Inngest 3.44.3** - Event-driven workflows and background jobs
+- **Nodemailer 7.0.10** - Email delivery
+- **Finnhub API** - Real-time stock market data
+- **Google Gemini AI** - AI-powered insights and summaries
+- **bcryptjs** - Password hashing
+
+### Development Tools
+- **Turbopack** - Fast bundler
+- **ESLint** - Code linting
+- **TypeScript** - Static type checking
+
+## ✨ Features
+
+### 📊 Stock Dashboard
+Track real-time stock prices with interactive line and candlestick charts, including historical data. Filter stocks by industry, performance, or market cap to find the best investment opportunities.
+
+### 🔍 Powerful Search
+Quickly find the best stocks with an intelligent search system that helps you navigate through thousands of companies efficiently.
+
+### 📈 Watchlist & Alerts
+Create a personalized watchlist, set alert thresholds for price changes or volume spikes, and receive instant email notifications to stay on top of the market.
+
+### 💼 Company Insights
+Explore detailed financial data such as PE ratio, EPS, revenue, recent news, filings, analyst ratings, and sentiment scores for informed decision-making.
+
+### ⚡ Real-Time Workflows
+Powered by Inngest, automate event-driven processes like price updates, alert scheduling, automated reporting, and AI-driven insights.
+
+### 🤖 AI-Powered Alerts & Summaries
+Generate personalized market summaries, daily digests, and earnings report notifications, helping users track performance and make data-driven decisions.
+
+### 🔔 Customizable Notifications
+Fine-tune alerts and notifications based on user watchlists and preferences for a highly personalized experience.
+
+### 📊 Analytics & Insights
+Gain insights into user behavior, stock trends, and engagement metrics, enabling smarter business and trading decisions.
+
+## 📝 Recent Updates
+
+### Password Visibility Toggle (Latest)
+Enhanced user experience across authentication pages with secure, accessible password visibility toggles:
+
+- **Sign-In Page** (`app/(auth)/sign-in/page.tsx`): Added password visibility toggle using Lucide React icons (`Eye`/`EyeOff`)
+- **Sign-Up Page** (`app/(auth)/sign-up/page.tsx`): Implemented password visibility toggle with consistent styling
+- **Reset Password Page**: Already featured password toggles, used as reference for implementation
+
+**Implementation Details:**
+- Uses `useState` for `showPassword` state management
+- Accessible button with proper `aria-label` attributes
+- Mobile-responsive design
+- Preserves input values during toggle
+- Consistent styling across all auth pages
+
+### Email Template Customization
+Updated welcome email templates to reflect Nexus Trade branding:
+
+- **Welcome Email Template** (`lib/nodemailer/templates.ts`):
+  - Replaced all "Signalist" references with "Nexus Trade"
+  - Updated copyright to "© 2025 Nexus Trade"
+  - Changed footer address to "Nexus Trade HQ, Nairobi, Kenya"
+  - Updated logo and dashboard preview image URLs to use environment variables
+  - Modified "Go to Dashboard" button to use dynamic `NEXT_PUBLIC_APP_URL`
+  - Updated unsubscribe and "Visit Nexus Trade" links with proper URL construction
+
+- **Email Service** (`lib/nodemailer/index.ts`):
+  - Enhanced `sendWelcomeEmail` function to dynamically construct URLs from environment variables
+  - Supports customizable logo and dashboard preview images via `NEXT_PUBLIC_WELCOME_EMAIL_LOGO_URL` and `NEXT_PUBLIC_WELCOME_EMAIL_PREVIEW_URL`
+  - Automatically builds dashboard, unsubscribe, and site URLs from `NEXT_PUBLIC_APP_URL`
+  - Updated email subject and sender name to "Nexus Trade"
+
+## 🚀 Quickstart
+
+### Prerequisites
+- Node.js 20+ installed
+- MongoDB database (local or cloud)
+- Finnhub API key ([Get one here](https://finnhub.io/))
+- Google Gemini API key ([Get one here](https://ai.google.dev/))
+- Gmail account for Nodemailer (or configure another SMTP service)
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd Nexus-Trade
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   # or
+   yarn install
+   # or
+   pnpm install
+   ```
+
+3. **Set up environment variables**
+   
+   Create a `.env.local` file in the root directory with the following variables:
+
+   ```env
+   NODE_ENV='development'
+
+   NEXT_PUBLIC_BASE_URL=http://localhost:3000
+
+   # FINNHUB
+   NEXT_PUBLIC_NEXT_PUBLIC_FINNHUB_API_KEY=your_finnhub_api_key_here
+   FINNHUB_BASE_URL=https://finnhub.io/api/v1
+
+   # MONGODB
+   MONGODB_URI=your_mongodb_connection_string_here
+
+   # BETTER AUTH
+   BETTER_AUTH_SECRET=your_random_secret_key_here
+   BETTER_AUTH_URL=http://localhost:3000
+
+   # GEMINI
+   GEMINI_API_KEY=your_gemini_api_key_here
+
+   # NODEMAILER
+   NODEMAILER_EMAIL=your_gmail_address@gmail.com
+   NODEMAILER_PASSWORD=your_app_specific_password_here
+
+   # Optional: Email customization
+   NEXT_PUBLIC_APP_URL=http://localhost:3000
+   NEXT_PUBLIC_WELCOME_EMAIL_LOGO_URL=http://localhost:3000/images/nexus-trade-logo.png
+   NEXT_PUBLIC_WELCOME_EMAIL_PREVIEW_URL=http://localhost:3000/images/nexus-trade-dashboard.png
+   ```
+
+   **Important Notes:**
+   - For Gmail, you'll need to generate an [App-Specific Password](https://support.google.com/accounts/answer/185833) for `NODEMAILER_PASSWORD`
+   - Generate a secure random string for `BETTER_AUTH_SECRET` (e.g., using `openssl rand -base64 32`)
+   - Replace all placeholder values with your actual credentials
+
+4. **Run the development server**
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   # or
+   pnpm dev
+   ```
+
+5. **Open your browser**
+   
+   Navigate to [http://localhost:3000](http://localhost:3000) to see the application.
+
+### Building for Production
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run build
+npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🔧 Environment Variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Required Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `NODE_ENV` | Environment mode | `development` or `production` |
+| `NEXT_PUBLIC_BASE_URL` | Base URL for the application | `http://localhost:3000` |
+| `NEXT_PUBLIC_NEXT_PUBLIC_FINNHUB_API_KEY` | Finnhub API key for stock data | `your_finnhub_key` |
+| `FINNHUB_BASE_URL` | Finnhub API base URL | `https://finnhub.io/api/v1` |
+| `MONGODB_URI` | MongoDB connection string | `mongodb://localhost:27017/nexustrade` |
+| `BETTER_AUTH_SECRET` | Secret key for Better Auth | Random 32+ character string |
+| `BETTER_AUTH_URL` | Better Auth callback URL | `http://localhost:3000` |
+| `GEMINI_API_KEY` | Google Gemini API key | `your_gemini_key` |
+| `NODEMAILER_EMAIL` | Email address for sending emails | `your_email@gmail.com` |
+| `NODEMAILER_PASSWORD` | Email password or app-specific password | `your_password` |
 
-## Learn More
+### Optional Variables
 
-To learn more about Next.js, take a look at the following resources:
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `NEXT_PUBLIC_APP_URL` | Public app URL for email links | `https://your-nexus-trade-domain.com` |
+| `NEXT_PUBLIC_WELCOME_EMAIL_LOGO_URL` | Logo URL for welcome emails | `${NEXT_PUBLIC_APP_URL}/images/nexus-trade-logo.png` |
+| `NEXT_PUBLIC_WELCOME_EMAIL_PREVIEW_URL` | Dashboard preview image URL | `${NEXT_PUBLIC_APP_URL}/images/nexus-trade-dashboard.png` |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📁 Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+Nexus-Trade/
+├── app/                    # Next.js App Router pages
+│   ├── (auth)/            # Authentication routes
+│   │   ├── sign-in/       # Sign-in page with password toggle
+│   │   └── sign-up/       # Sign-up page with password toggle
+│   ├── (root)/            # Main application routes
+│   │   ├── stocks/        # Stock detail pages
+│   │   └── page.tsx       # Dashboard
+│   ├── api/               # API routes
+│   │   ├── auth/         # Authentication endpoints
+│   │   └── inngest/      # Inngest webhook handler
+│   ├── forgot-password/  # Password recovery
+│   └── reset-password/   # Password reset with toggle
+├── components/            # React components
+│   ├── forms/            # Form components
+│   └── ui/               # UI primitives
+├── lib/                   # Utility libraries
+│   ├── actions/          # Server actions
+│   ├── better-auth/      # Auth configuration
+│   ├── inngest/          # Inngest functions
+│   ├── nodemailer/       # Email templates and service
+│   └── utils/           # Helper functions
+└── public/               # Static assets
+```
 
-## Deploy on Vercel
+## 🔐 Authentication
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The application uses Better Auth for secure authentication with:
+- Email/password authentication
+- Password reset functionality
+- Secure password hashing with bcryptjs
+- Session management
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📧 Email System
+
+The email system is powered by Nodemailer and Inngest:
+- **Welcome Emails**: Sent automatically on user signup with personalized AI-generated content
+- **News Summary Emails**: Daily market news digests based on user watchlists
+- **Price Alerts**: Real-time notifications when stocks hit target prices
+- **Volume Alerts**: Notifications for unusual trading volume
+
+All emails use responsive HTML templates with dark mode support.
+
+## 🤖 AI Integration
+
+Google Gemini AI powers:
+- Personalized welcome email introductions
+- Daily market news summaries
+- Stock analysis and insights
+
+## 🔄 Background Jobs
+
+Inngest handles:
+- Automated email delivery
+- Scheduled news summaries (daily at 12:00 PM)
+- Price and volume alert processing
+- User activity tracking
+
+## 🧪 Testing
+
+Test database connection:
+```bash
+npm run test:db
+```
+
+## 📄 License
+
+This project is private and proprietary.
+
+## 🤝 Contributing
+
+This is a private project. For questions or issues, please contact the development team.
+
+---
+
+**Built for traders and investors**
