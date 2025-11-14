@@ -265,9 +265,9 @@ npm run test:db
 
 This project is private and proprietary.
 
-For questions or issues, please contact the development team.
+For questions or issues, please contact the development team +254712017805.
 
-Much thanks to Adrian of JS Mastery for providing tools from which this was built on.
+Much thanks to Adrian of JS Mastery for providing tools and the tutorial from which this was built on.
 
 ---
 
