@@ -75,10 +75,6 @@ Enhanced user experience across authentication pages with secure, accessible pas
 Updated welcome email templates to reflect Nexus Trade branding:
 
 - **Welcome Email Template** (`lib/nodemailer/templates.ts`):
-  - Replaced all "Signalist" references with "Nexus Trade"
-  - Updated copyright to "© 2025 Nexus Trade"
-  - Changed footer address to "Nexus Trade HQ, Nairobi, Kenya"
-  - Updated logo and dashboard preview image URLs to use environment variables
   - Modified "Go to Dashboard" button to use dynamic `NEXT_PUBLIC_APP_URL`
   - Updated unsubscribe and "Visit Nexus Trade" links with proper URL construction
 
@@ -269,9 +265,9 @@ npm run test:db
 
 This project is private and proprietary.
 
-## 🤝 Contributing
+For questions or issues, please contact the development team.
 
-This is a private project. For questions or issues, please contact the development team.
+Much thanks to Adrian of JS Mastery for providing tools from which this was built on.
 
 ---
 
