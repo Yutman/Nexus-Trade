@@ -263,7 +263,7 @@ npm run test:db
 
 ## License
 
-This project is private and proprietary.
+This project is proprietary.
 
 For questions or issues, please contact the development team +254712017805.
 
