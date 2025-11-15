@@ -28,6 +28,8 @@ A modern, full-stack stock trading web application built with Next.js, featuring
 - **Turbopack** - Fast bundler
 - **ESLint** - Code linting
 - **TypeScript** - Static type checking
+- **Cursor** - IDE
+- **Grok** - Research
 
 ##  Features
 
